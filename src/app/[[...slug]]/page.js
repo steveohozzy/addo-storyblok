@@ -1,17 +1,28 @@
-import { StoryblokStory } from '@storyblok/react/rsc';
-import { getStoryblokApi } from '@/lib/storyblok';
+import { StoryblokStory } from "@storyblok/react/rsc";
+import { getStoryblokApi } from "@/lib/storyblok";
+import { notFound } from "next/navigation";
 
 export default async function Page({ params }) {
-	const { slug } = await params;
+  const slug = (await params)?.slug?.join("/") || "home";
 
-	let fullSlug = slug ? slug.join('/') : 'home';
+  let data;
 
-	let sbParams = {
-		version: 'draft',
-	};
+  try {
+    const storyblokApi = getStoryblokApi();
 
-	const storyblokApi = getStoryblokApi();
-	let { data } = await storyblokApi.get(`cdn/stories/${fullSlug}`, sbParams);
+    const res = await storyblokApi.get(
+      `cdn/stories/${slug}`,
+      { version: "draft" }
+    );
 
-	return <StoryblokStory story={data.story} />;
+    data = res.data;
+  } catch (e) {
+    notFound();
+  }
+
+  if (!data?.story) {
+    notFound();
+  }
+
+  return <StoryblokStory story={data.story} />;
 }

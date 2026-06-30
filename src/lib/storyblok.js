@@ -1,24 +1,56 @@
-import Page from '@/components/Page';
-import Feature from '@/components/Feature';
-import Grid from '@/components/Grid';
-import Teaser from '@/components/Teaser';
-import { apiPlugin, storyblokInit } from '@storyblok/react/rsc';
+import Page from "@/components/Page";
+import BlogPage from "@/components/BlogPage";
+import BlogPost from "@/components/BlogPost";
+import BrandsHub from "@/components/BrandsHub";
+import BrandSection from "@/components/BrandSection";
+import HomepageHero from "@/components/HomepageHero";
+import StorySection from "@/components/StorySection";
+import Marquee from "@/components/Marquee";
+import PanelsSet from "@/components/PanelsSet";
+import Blog from "@/components/BlogSection";
+import Newsletter from "@/components/Newsletter";
+import RichText from "@/components/RichText";
+import Grid from "@/components/Grid";
+import Column from "@/components/Column";
+import HtmlBlock from "@/components/HTMLBlock";
+
+import { apiPlugin, storyblokInit } from "@storyblok/react/rsc";
+
+
+export function resolveLink(link) {
+  if (!link) return "/";
+
+  if (link.linktype === "story") {
+    return `/${link.cached_url}`;
+  }
+
+  return link.url || "/";
+}
 
 export const getStoryblokApi = storyblokInit({
-	accessToken: process.env.STORYBLOK_DELIVERY_API_TOKEN,
-	use: [apiPlugin],
-	components: {
-		page: Page,
-		feature: Feature,
-		grid: Grid,
-		teaser: Teaser,
-	},
-	apiOptions: {
-		/** Set the correct region for your space. Learn more: https://www.storyblok.com/docs/packages/storyblok-js#example-region-parameter */
-		region: process.env.STORYBLOK_REGION || 'eu',
-		/** The following code is only required when creating a Storyblok space directly via the Blueprints feature. */
-		endpoint: process.env.STORYBLOK_API_BASE_URL
-			? `${new URL(process.env.STORYBLOK_API_BASE_URL).origin}/v2`
-			: undefined,
-	},
+  accessToken: process.env.STORYBLOK_DELIVERY_API_TOKEN,
+
+  use: [apiPlugin],
+
+  components: {
+    page: Page,
+    homepageHero: HomepageHero,
+    storySection: StorySection,
+    Marquee: Marquee,
+    panelsSet: PanelsSet,
+    blogSection: Blog,
+    newsletter: Newsletter,
+    RichText: RichText,
+    Grid: Grid,
+    column: Column,
+    htmlBlock: HtmlBlock,
+    blogPage: BlogPage,
+    blogPost: BlogPost,
+    brandsHub: BrandsHub,
+    brandSection: BrandSection,
+  },
+
+  apiOptions: {
+    region: "eu",
+  },
 });
